@@ -21,17 +21,19 @@ public class SerializationUtils {
     /**
      * Deserialize to an object from the file
      */
-    public static Object deserialize(String fileName) throws IOException, ClassNotFoundException {
+    public static Blockchain deserialize(String fileName) throws IOException, ClassNotFoundException {
         try {
-            FileInputStream fis = new FileInputStream(fileName);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            Object obj = ois.readObject();
-            ois.close();
-            return obj;
+            if (new File(fileName).isFile()) {
+                FileInputStream fis = new FileInputStream(fileName);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream ois = new ObjectInputStream(bis);
+                Blockchain obj = (Blockchain) ois.readObject();
+                ois.close();
+                return obj;
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return null;
+        return new Blockchain();
     }
 }

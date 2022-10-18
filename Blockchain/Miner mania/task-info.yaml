@@ -12,6 +12,221 @@ files:
         }
     }
   learner_created: false
+- name: src/blockchain/StringUtil.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.security.MessageDigest;
+
+    public class StringUtil {
+        /* Applies Sha256 to a string and returns a hash. */
+        public static String applySha256(String input){
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                /* Applies sha256 to our input */
+                byte[] hash = digest.digest(input.getBytes("UTF-8"));
+                StringBuilder hexString = new StringBuilder();
+                for (byte elem: hash) {
+                    String hex = Integer.toHexString(0xff & elem);
+                    if(hex.length() == 1) hexString.append('0');
+                    hexString.append(hex);
+                }
+                return hexString.toString();
+            }
+            catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+  learner_created: true
+- name: src/blockchain/Blockchain.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.io.Serializable;
+    import java.util.*;
+
+    public class Blockchain implements Serializable {
+
+        public int n;
+        public final List<Block> bc = new ArrayList<>();
+
+        public void check() {
+            for (int i = bc.size() - 5; i < bc.size(); i++) {
+                System.out.println(bc.get(i));
+            }
+        }
+
+        public void create() {
+            Block block = new Block();
+
+            long time1 = new Date().getTime();
+            block.setTimestamp(time1);
+            if (bc.size() == 0) {
+                block.setId(0);
+                block.setHashPrev("0");
+            } else {
+                Block prevBlock = bc.get(bc.size() - 1);
+
+                block.setId(prevBlock.getId() + 1);
+                block.setHashPrev(prevBlock.getHash());
+            }
+
+            String start = "";
+            for (int i = 0; i < n; i++) {
+                start += "0";
+            }
+
+            final Random random = new Random();
+
+            boolean stop = false;
+            do {
+
+                block.setNumber(random.nextInt(Integer.MAX_VALUE));
+
+                long time2 = new Date().getTime();
+                block.setTime((int) ((time2 - time1) / 1000));
+                block.setHash(StringUtil.applySha256(block.getId() + block.getTimestamp() + block.getHashPrev() +
+                        block.getNumber() + block.getTime()));
+
+                if (block.getHash().startsWith(start)) {
+                    stop = true;
+                }
+            } while (!stop);
+
+            bc.add(block);
+        }
+
+        public void init() {
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Enter how many zeros the hash must start with: ");
+            n = Integer.parseInt(scanner.nextLine());
+            System.out.println();
+        }
+    }
+  learner_created: true
+- name: src/blockchain/SerializationUtils.java
+  visible: true
+  text: |-
+    package blockchain;
+
+    import java.io.*;
+
+    public class SerializationUtils {
+        /**
+         * Serialize the given object to the file
+         */
+        public static void serialize(Object obj, String fileName) throws IOException {
+            try {
+                FileOutputStream fos = new FileOutputStream(fileName);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                oos.writeObject(obj);
+                oos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Deserialize to an object from the file
+         */
+        public static Object deserialize(String fileName) throws IOException, ClassNotFoundException {
+            try {
+                FileInputStream fis = new FileInputStream(fileName);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream ois = new ObjectInputStream(bis);
+                Object obj = ois.readObject();
+                ois.close();
+                return obj;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+  learner_created: true
+- name: src/blockchain/Block.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.io.Serializable;
+
+    public class Block implements Serializable {
+        private int id;
+        private long timestamp;
+        private String hashPrev;
+        private String hash;
+        private int number;
+        private int time;
+
+        public Block() {
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public String getHashPrev() {
+            return hashPrev;
+        }
+
+        public void setHashPrev(String hashPrev) {
+            this.hashPrev = hashPrev;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
+        public void setHash(String hash) {
+            this.hash = hash;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
+        }
+
+        public int getTime() {
+            return time;
+        }
+
+        public void setTime(int time) {
+            this.time = time;
+        }
+
+        @Override
+        public String toString() {
+            return "Block:" +
+                    "\nId: " + id +
+                    "\nTimestamp: " + timestamp +
+                    "\nMagic number: " + number +
+                    "\nHash of the previous block:\n" + hashPrev +
+                    "\nHash of the block:\n" + hash +
+                    "\nBlock was generating for " + time + " seconds\n";
+        }
+    }
+  learner_created: true
 - name: test/BlockchainTest.java
   visible: false
   text: |
@@ -253,6 +468,12 @@ files:
         }
     }
   learner_created: false
+- name: blockchain.data
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5415#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Tue, 18 Oct 2022 16:13:00 UTC
 record: -1
