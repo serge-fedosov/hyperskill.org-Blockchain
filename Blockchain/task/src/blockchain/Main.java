@@ -19,6 +19,10 @@ public class Main {
                 while (blockchain.getSize() < num) {
                     Block block = new Block();
                     block.generate(miner, blockchain, num);
+                    block.setData("Message " + miner);
+//                    blockchain.addMessage("Message " + miner);
+//                    block.setData(blockchain.getMessage());
+//                    blockchain.clearMessage();
                     blockchain.add(block);
                     try {
                         SerializationUtils.serialize(blockchain, filename);

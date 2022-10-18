@@ -7,6 +7,23 @@ public class Blockchain implements Serializable {
 
     private int n = 0;
     private final List<Block> bc = new ArrayList<>();
+    private final List<String> message = new ArrayList<>();
+
+    public String getMessage() {
+        String result = "";
+        for (var str: message) {
+            result += "\n" + str;
+        }
+        return result;
+    }
+
+    public void addMessage(String str) {
+        message.add(str);
+    }
+
+    public void clearMessage() {
+        message.clear();
+    }
 
     public void check() {
         for (int i = bc.size() - 5; i < bc.size(); i++) {

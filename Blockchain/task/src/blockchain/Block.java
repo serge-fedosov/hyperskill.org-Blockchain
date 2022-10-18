@@ -13,6 +13,7 @@ public class Block implements Serializable {
     private int time;
     private int miner;
     private String n;
+    private String data;
 
     public Block() {
     }
@@ -81,6 +82,14 @@ public class Block implements Serializable {
         this.n = n;
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "Block:" +
@@ -90,6 +99,7 @@ public class Block implements Serializable {
                 "\nMagic number: " + number +
                 "\nHash of the previous block:\n" + hashPrev +
                 "\nHash of the block:\n" + hash +
+                "\nBlock data: " + (data.isEmpty() ? "no messages" : "\n" + data) +
                 "\nBlock was generating for " + time + " seconds" +
                 "\n" + n + "\n";
     }
@@ -118,7 +128,6 @@ public class Block implements Serializable {
 
         boolean stop = false;
         do {
-
             setNumber(random.nextInt(Integer.MAX_VALUE));
 
             long time2 = new Date().getTime();
@@ -131,8 +140,6 @@ public class Block implements Serializable {
             if (bc.getSize() >= num) {
                 stop = true;
             }
-
-//            System.out.println("miner " + miner);
         } while (!stop);
 
     }
