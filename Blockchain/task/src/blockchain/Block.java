@@ -1,10 +1,14 @@
 package blockchain;
 
-public class Block {
+import java.io.Serializable;
+
+public class Block implements Serializable {
     private int id;
     private long timestamp;
     private String hashPrev;
     private String hash;
+    private int number;
+    private int time;
 
     public Block() {
     }
@@ -41,13 +45,30 @@ public class Block {
         this.hash = hash;
     }
 
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     @Override
     public String toString() {
         return "Block:" +
                 "\nId: " + id +
                 "\nTimestamp: " + timestamp +
+                "\nMagic number: " + number +
                 "\nHash of the previous block:\n" + hashPrev +
                 "\nHash of the block:\n" + hash +
-                "\n";
+                "\nBlock was generating for " + time + " seconds\n";
     }
 }

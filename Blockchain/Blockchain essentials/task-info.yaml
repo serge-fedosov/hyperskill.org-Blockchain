@@ -209,9 +209,9 @@ files:
 - name: src/blockchain/Block.java
   visible: true
   learner_created: true
-feedback_link: https://hyperskill.org/projects/50/stages/271/implement#comment
+feedback_link: https://hyperskill.org/learn/step/5413#comment
 status: Solved
 feedback:
   message: Congratulations!
   time: Mon, 17 Oct 2022 19:49:52 UTC
-record: -1
+record: 1

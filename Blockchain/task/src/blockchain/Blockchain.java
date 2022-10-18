@@ -1,23 +1,24 @@
 package blockchain;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
-public class Blockchain {
+public class Blockchain implements Serializable {
 
+    public int n;
     public final List<Block> bc = new ArrayList<>();
 
     public void check() {
-        for (var element: bc) {
-            System.out.println(element);
+        for (int i = bc.size() - 5; i < bc.size(); i++) {
+            System.out.println(bc.get(i));
         }
     }
 
     public void create() {
         Block block = new Block();
 
-        block.setTimestamp(new Date().getTime());
+        long time1 = new Date().getTime();
+        block.setTimestamp(time1);
         if (bc.size() == 0) {
             block.setId(0);
             block.setHashPrev("0");
@@ -28,7 +29,36 @@ public class Blockchain {
             block.setHashPrev(prevBlock.getHash());
         }
 
-        block.setHash(StringUtil.applySha256(block.getId() + block.getTimestamp() + block.getHashPrev()));
+        String start = "";
+        for (int i = 0; i < n; i++) {
+            start += "0";
+        }
+
+        final Random random = new Random();
+
+        boolean stop = false;
+        do {
+
+            block.setNumber(random.nextInt(Integer.MAX_VALUE));
+
+            long time2 = new Date().getTime();
+            block.setTime((int) ((time2 - time1) / 1000));
+            block.setHash(StringUtil.applySha256(block.getId() + block.getTimestamp() + block.getHashPrev() +
+                    block.getNumber() + block.getTime()));
+
+            if (block.getHash().startsWith(start)) {
+                stop = true;
+            }
+        } while (!stop);
+
         bc.add(block);
+    }
+
+    public void init() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter how many zeros the hash must start with: ");
+        n = Integer.parseInt(scanner.nextLine());
+        System.out.println();
     }
 }
