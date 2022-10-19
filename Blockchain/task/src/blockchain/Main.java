@@ -10,10 +10,10 @@ public class Main {
         final String filename = "blockchain.data";
         final Blockchain blockchain = SerializationUtils.deserialize(filename);;
 
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-        int num = blockchain.getSize() + 5;
+        ExecutorService executor = Executors.newFixedThreadPool(15);
+        int num = blockchain.getSize() + 15;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             int miner = i;
             executor.submit(() -> {
                 while (blockchain.getSize() < num) {
@@ -33,10 +33,7 @@ public class Main {
             });
         }
 
-//        while (blockchain.getSize() < num) {
-//            Thread.sleep(100);
-//        }
-        executor.awaitTermination(10, TimeUnit.SECONDS);
+        executor.awaitTermination(14, TimeUnit.SECONDS);
 
         blockchain.check();
         executor.shutdownNow();

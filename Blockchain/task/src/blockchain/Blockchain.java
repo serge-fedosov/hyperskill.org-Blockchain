@@ -26,7 +26,8 @@ public class Blockchain implements Serializable {
     }
 
     public void check() {
-        for (int i = bc.size() - 5; i < bc.size(); i++) {
+        int min = Math.max(bc.size() - 15, 0);
+        for (int i = min; i < bc.size(); i++) {
             System.out.println(bc.get(i));
         }
     }
@@ -49,7 +50,7 @@ public class Blockchain implements Serializable {
         }
 
         int t = block.getTime();
-        if (t < 10) {
+        if (t < 10 && n < 3) {
             n++;
             block.setN("N was increased to " + n);
         } else if (t > 60) {
